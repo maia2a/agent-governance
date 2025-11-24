@@ -1,4 +1,4 @@
-from src.core.models import Product, PurchaseProposal
+from src.core.models import Product, PurchaseProposals
 from src.adapters.price_checker import MockPriceChecker
 
 def run_test():
