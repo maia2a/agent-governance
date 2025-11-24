@@ -11,7 +11,7 @@ def run_test():
   checker = MockPriceChecker()
   
   # 3. Executar checagem
-  updated_product = checker.check(iphone)
+  updated_product = checker.check_price(iphone)
   
   # 4. Validar lógica simples
   if updated_product.current_price and updated_product.current_price <= updated_product.target_price:

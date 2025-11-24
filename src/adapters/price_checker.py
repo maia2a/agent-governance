@@ -1,6 +1,6 @@
 import random
 from abc import ABC, abstractmethod
-from core.models import Product
+from src.core.models import Product
 
 class PriceCheckerInterface(ABC):
   """
