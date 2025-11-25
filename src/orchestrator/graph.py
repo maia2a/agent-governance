@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
 from src.core.models import PurchaseProposal
 from src.adapters.price_checker import MockPriceChecker
 from src.orchestrator.state import AgentState
@@ -36,14 +37,33 @@ def analyst_node(state: AgentState):
       logs.append(f"[Analista] Oportunidade identificada: {product.name}")
   return {"proposals": new_proposals, "logs": logs}
 
+def execution_node(state: AgentState):
+  """
+    Passo 3: Executar a compra (SÓ RODA APÓS APROVAÇÃO).
+  """
+  proposals = state["proposals"]
+  logs = ["--- [Executor] Iniciando fase de compra ---"]
+
+  if not proposals:
+    logs.append("[Executor] Nenhuma proposta pendente.")
+  for proposal in proposals:
+    logs.append(f"[Executor] 🛒 COMPRA EFETUADA via API: {proposal.product.name} por R$ {proposal.product.current_price}")
+  
+  return {"logs": logs}  
+
+
 def build_graph():
   workflow = StateGraph(AgentState)
 
   workflow.add_node("monitor_price", monitor_price_node)
   workflow.add_node("analyst", analyst_node)
+  workflow.add_node("execute", execution_node)
 
   workflow.set_entry_point("monitor_price")
   workflow.add_edge("monitor_price", "analyst")
-  workflow.add_edge("analyst", END)
+  workflow.add_edge("analyst", "execute")
+  workflow.add_edge("execute", END)
 
-  return workflow.compile()
+  checkpointer = MemorySaver()
+
+  return workflow.compile(checkpointer=checkpointer, interrupt_before["execute"])
