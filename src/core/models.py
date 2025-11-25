@@ -16,7 +16,7 @@ class Product:
   vendor: str = ""
 
 @dataclass
-class PurchaseProposals:
+class PurchaseProposal:
   """
     O artefato gerado pelo agente quando encontra uma oportunidade.
     Isso é o que o humano vai aprovar ou rejeitar.
