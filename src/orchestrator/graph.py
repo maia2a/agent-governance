@@ -1,5 +1,5 @@
 from langgraph.graph import StateGraph, END
-from src.core.models import PurchaseProposals
+from src.core.models import PurchaseProposal
 from src.adapters.price_checker import MockPriceChecker
 from src.orchestrator.state import AgentState
 
@@ -31,7 +31,7 @@ def analyst_node(state: AgentState):
 
   for product in products:
     if product.current_price and product.current_price <= product.target_price:
-      proposal = PurchaseProposals(product=product, reasoning="Preço alvo atingido (Lógica Determinística)")
+      proposal = PurchaseProposal(product=product, reasoning="Preço alvo atingido (Lógica Determinística)")
       new_proposals.append(proposal)
       logs.append(f"[Analista] Oportunidade identificada: {product.name}")
   return {"proposals": new_proposals, "logs": logs}
