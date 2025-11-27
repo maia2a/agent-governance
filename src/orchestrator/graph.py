@@ -66,4 +66,4 @@ def build_graph():
 
   checkpointer = MemorySaver()
 
-  return workflow.compile(checkpointer=checkpointer, interrupt_before["execute"])
+  return workflow.compile(checkpointer=checkpointer, interrupt_before=["execute"])
